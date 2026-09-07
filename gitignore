@@ -1,0 +1,13 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+rsconnect/
+renv/library/
+renv/local/
+renv/cellar/
+renv/staging/
+renv/python/
+/.quarto/
+notebooks/*_files/
+notebooks/*.html
