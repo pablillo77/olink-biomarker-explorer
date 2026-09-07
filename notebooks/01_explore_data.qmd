@@ -1,0 +1,43 @@
+---
+title: "01 — Explore Olink demo NPX data"
+author: "Pablo Giménez"
+format: html
+execute:
+  echo: true
+  warning: false
+---
+
+Purpose: understand the shape of `npx_data1` before writing any app code.
+Data are Olink's synthetic example datasets shipped with OlinkAnalyze.
+
+```{r setup}
+library(OlinkAnalyze)
+library(dplyr)
+library(ggplot2)
+# Source shared helpers. here::here() would be nicer; this keeps deps minimal.
+for (f in list.files("../R", pattern = "\\.R$", full.names = TRUE)) source(f)
+packageVersion("OlinkAnalyze")
+```
+
+## Shape
+
+Long format: one row per (sample, assay). Wide format (samples × proteins)
+is derived only when needed, e.g. for PCA.
+
+```{r shape}
+npx <- load_npx_demo("npx_data1")
+dim(npx)
+glimpse(npx)
+str(npx_summary(npx))
+```
+
+## Clinical variables
+
+```{r metadata}
+npx |>
+  filter(!is_control_sample(npx)) |>
+  distinct(SampleID, Subject, Treatment, Site, Time) |>
+  count(Treatment, Time)
+```
+
+## Next: QC (sample- and assay-level), then PCA, then group tests.
