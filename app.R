@@ -28,7 +28,9 @@ ui <- page_navbar(
              "(randomly generated, not patient data).")
   ),
   nav_panel("Overview", verbatimTextOutput("shape")),
-  nav_panel("Quality Control", mod_qc_ui("qc"))
+  nav_panel("Quality Control", mod_qc_ui("qc")),
+  nav_panel("PCA", mod_pca_ui("pca")),
+  nav_panel("Differential Abundance", mod_diffab_ui("diffab"))
 )
 
 server <- function(input, output, session) {
@@ -43,11 +45,15 @@ server <- function(input, output, session) {
     str(npx_summary(npx()))
   })
 
-  # Mount the QC module under namespace "qc". It gets the raw dataset in,
-  # and hands back a reactive of excluded SampleIDs — wired up to nothing
-  # yet, but this is exactly what the PCA/differential-abundance tabs will
-  # consume once they exist.
+  # Mount QC first. It returns a reactive of excluded SampleIDs — the
+  # module boundary in action: PCA and differential abundance don't know
+  # HOW the user picked those samples, only that "excluded" is a reactive
+  # they can call. Change one sample's flag in QC and both downstream
+  # tabs recompute automatically.
   excluded_samples <- mod_qc_server("qc", npx = npx)
+
+  mod_pca_server("pca", npx = npx, excluded = excluded_samples)
+  mod_diffab_server("diffab", npx = npx, excluded = excluded_samples)
 }
 
 shinyApp(ui, server)
