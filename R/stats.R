@@ -3,6 +3,19 @@
 # Both take the raw long-format NPX tibble and an optional vector of
 # SampleIDs to exclude (wired from the QC module), so every downstream
 # tab respects whatever the user flagged in QC.
+#
+# OlinkAnalyze::olink_lmer() depends on lme4, lmerTest, and broom
+# internally but doesn't formally declare them as hard dependencies
+# (they're Suggests, not Imports, since 5.0.0). renv's default snapshot
+# only records packages it detects via static analysis of library()/::
+# calls in the project's own code — since we only ever call
+# OlinkAnalyze::olink_lmer() and never lme4::/lmerTest::/broom:: directly,
+# renv doesn't "see" them as project dependencies even when installed.
+# Declaring them explicitly here makes them visible to renv::snapshot()
+# so they're recorded in renv.lock and get installed on shinyapps.io.
+requireNamespace("lme4", quietly = TRUE)
+requireNamespace("lmerTest", quietly = TRUE)
+requireNamespace("broom", quietly = TRUE)
 
 #' Run PCA on the samples x proteins matrix
 #'
