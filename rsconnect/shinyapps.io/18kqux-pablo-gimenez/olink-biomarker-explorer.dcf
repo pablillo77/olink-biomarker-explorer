@@ -5,6 +5,6 @@ account: 18kqux-pablo-gimenez
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 17855748
-bundleId: 12526833
+bundleId: 12526887
 url: https://18kqux-pablo-gimenez.shinyapps.io/olink-biomarker-explorer/
 version: 1
